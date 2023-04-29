@@ -424,7 +424,7 @@
 				TargetAttributes = {
 					420C23FB1F5D82C6008935D4 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 74JL49Z2D8;
+						DevelopmentTeam = 53TH2MD7BD;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
@@ -703,7 +703,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 74JL49Z2D8;
+				DEVELOPMENT_TEAM = 53TH2MD7BD;
 				INFOPLIST_FILE = ExampleApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
