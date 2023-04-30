@@ -2,6 +2,9 @@
 
 import ImagePicker
 import Photos
+import MobileCoreServices
+import Foundation
+import UIKit
 
 /// This is an example view controller that shows how Image Picker can be used
 class ViewController: UITableViewController, UIDropInteractionDelegate {
@@ -40,9 +43,9 @@ class ViewController: UITableViewController, UIDropInteractionDelegate {
     var numberOfActionItems = 2
     var cameraConfig: CameraItemConfig = .enabled
     var assetsSource: AssetsSource = .recentlyAdded
-    var assetItemsInRow = 2
+    var assetItemsInRow = 3
     var captureMode: CaptureSettings.CameraMode = .photoAndLivePhoto
-    var savesCapturedAssets = false
+    var savesCapturedAssets = true
     var dragAndDropConfig = false
     var imagePickerController: ImagePickerController?
     
@@ -256,8 +259,38 @@ class ViewController: UITableViewController, UIDropInteractionDelegate {
         if selectedCount == 0 {
             navigationController?.visibleViewController?.navigationItem.setRightBarButton(nil, animated: true)
         } else {
-            let title = "Items (\(selectedCount))"
+            let title = "Upload (\(selectedCount))"
             navigationController?.visibleViewController?.navigationItem.setRightBarButton(UIBarButtonItem(title: title, style: .plain, target: nil, action: nil), animated: true)
         }
     }
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    if let image = info[.originalImage] as? UIImage {
+      UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    picker.dismiss(animated: false) {
+      self.imagePicker(controller: ImagePickerController(), didSelectActionItemAt: 0)
+    }
+  }
+
+  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+      picker.dismiss(animated: true, completion: nil)
+  }
+
+  @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+      if let error = error {
+          // Handle the error case
+          let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+          alertController.addAction(UIAlertAction(title: "OK", style: .default))
+          present(alertController, animated: true)
+      } else {
+          // Handle the success case
+          let alertController = UIAlertController(title: "Saved", message: "Your image has been saved to the Photo Library.", preferredStyle: .alert)
+          alertController.addAction(UIAlertAction(title: "OK", style: .default))
+          present(alertController, animated: true)
+      }
+  }
 }

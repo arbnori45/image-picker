@@ -224,7 +224,7 @@ open class ImagePickerController: UIViewController {
         
         let point = sender.location(in: cameraCell)
         if cameraCell.touchIsCaptureEffective(point: point) {
-            takePicture()
+          delegate?.imagePicker(controller: self, didSelectActionItemAt: 0)
         }
     }
 }

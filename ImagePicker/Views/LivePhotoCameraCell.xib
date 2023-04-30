@@ -17,7 +17,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="219" height="259"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eMk-y2-nzd" customClass="StationaryButton" customModule="ImagePicker" customModuleProvider="target">
+                    <button hidden="YES" opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eMk-y2-nzd" customClass="StationaryButton" customModule="ImagePicker" customModuleProvider="target">
                         <rect key="frame" x="87.5" y="12" width="44" height="44"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="44" id="QFs-fC-MVS"/>
@@ -39,7 +39,7 @@
                             <action selector="snapButtonTapped:" destination="KUc-Pb-VFJ" eventType="touchUpInside" id="O94-fR-dls"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXx-j7-0BW">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXx-j7-0BW">
                         <rect key="frame" x="170" y="10" width="44" height="44"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="44" id="Dep-n0-2cB"/>
@@ -69,12 +69,22 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="No5-p1-VGl">
+                        <rect key="frame" x="77.5" y="108.5" width="64.5" height="42"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" image="button-camera" title=" ">
+                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </buttonConfiguration>
+                    </button>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="hhB-fB-d84"/>
             <constraints>
                 <constraint firstItem="eMk-y2-nzd" firstAttribute="centerX" secondItem="hhB-fB-d84" secondAttribute="centerX" id="DzQ-dN-G13"/>
+                <constraint firstItem="No5-p1-VGl" firstAttribute="centerX" secondItem="KUc-Pb-VFJ" secondAttribute="centerX" id="E4M-lF-Tjq"/>
                 <constraint firstItem="eMk-y2-nzd" firstAttribute="top" secondItem="hhB-fB-d84" secondAttribute="top" constant="12" id="LWL-KC-Ix6"/>
+                <constraint firstItem="No5-p1-VGl" firstAttribute="centerY" secondItem="KUc-Pb-VFJ" secondAttribute="centerY" id="Plb-4e-3oj"/>
                 <constraint firstItem="eXx-j7-0BW" firstAttribute="top" secondItem="hhB-fB-d84" secondAttribute="top" constant="10" id="ZHC-yM-3is"/>
                 <constraint firstItem="hhB-fB-d84" firstAttribute="trailing" secondItem="eXx-j7-0BW" secondAttribute="trailing" constant="5" id="bRl-6l-azU"/>
                 <constraint firstItem="OHT-YT-HK2" firstAttribute="centerX" secondItem="hhB-fB-d84" secondAttribute="centerX" id="dDC-I0-T69"/>
@@ -97,6 +107,7 @@
         </designable>
     </designables>
     <resources>
+        <image name="button-camera" width="36" height="28"/>
         <image name="button_snap" width="60" height="60"/>
         <image name="icon-flip-camera" width="28" height="22"/>
         <image name="icon-live-off" width="25" height="25"/>

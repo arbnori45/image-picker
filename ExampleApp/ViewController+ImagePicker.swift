@@ -4,6 +4,7 @@ import ImagePicker
 import Photos
 
 extension ViewController: ImagePickerControllerDelegate {
+
     public func imagePicker(controller: ImagePickerController, didSelectActionItemAt index: Int) {
         print("did select action \(index)")
         
@@ -14,7 +15,8 @@ extension ViewController: ImagePickerControllerDelegate {
         if index == 0 && UIImagePickerController.isSourceTypeAvailable(.camera) {
             let vc = UIImagePickerController()
             vc.sourceType = .camera
-            vc.allowsEditing = true
+            vc.allowsEditing = false
+          vc.delegate = self
             if let mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera) {
                 vc.mediaTypes = mediaTypes
             }

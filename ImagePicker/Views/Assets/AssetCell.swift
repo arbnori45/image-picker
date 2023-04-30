@@ -11,10 +11,18 @@ class AssetCell: UICollectionViewCell, ImagePickerAssetCell {
     
     override var isSelected: Bool {
         didSet {
-            selectedImageView.isHidden = !isSelected
-            if !selectedImageView.isHidden {
+            if isSelected {
                 selectedImageView.image = UIImage(named: "icon-check-background", in: Bundle(for: type(of: self)), compatibleWith: nil)
                 selectedImageView.foregroundImage = UIImage(named: "icon-check", in: Bundle(for: type(of: self)), compatibleWith: nil)
+              selectedImageView.tintColor = .blue
+            } else {
+              if #available(iOS 13.0, *) {
+                selectedImageView.image = UIImage(systemName: "circle")?.withTintColor(.white)
+                selectedImageView.foregroundImage = nil
+                selectedImageView.tintColor = .white
+              } else {
+                // Fallback on earlier versions
+              }
             }
         }
     }
@@ -51,7 +59,9 @@ class AssetCell: UICollectionViewCell, ImagePickerAssetCell {
         imageView.clipsToBounds = true
         
         selectedImageView.frame = CGRect(origin: .zero, size: CGSize(width: 31, height: 31))
-        selectedImageView.isHidden = true
+        selectedImageView.isHidden = false
+        selectedImageView.image = UIImage(systemName: "circle")
+        selectedImageView.tintColor = .white
         
         contentView.addSubview(imageView)
         contentView.addSubview(selectedImageView)
