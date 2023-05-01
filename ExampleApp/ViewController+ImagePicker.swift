@@ -28,7 +28,7 @@ extension ViewController: ImagePickerControllerDelegate {
         }
     }
     
-    public func imagePicker(controller: ImagePickerController, didSelect asset: PHAsset) {
+  public func imagePicker(controller: ImagePickerController, didSelect asset: PHAsset, at index: Int) {
         print("selected assets: \(controller.selectedAssets.count)")
         updateNavigationItem(with: controller.selectedAssets.count)
     }

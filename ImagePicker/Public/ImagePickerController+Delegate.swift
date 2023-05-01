@@ -9,7 +9,7 @@ extension ImagePickerController: ImagePickerDelegateDelegate {
     }
 
     func imagePicker(delegate pickerDelegate: ImagePickerDelegate, didSelectAssetItemAt index: Int) {
-        delegate?.imagePicker(controller: self, didSelect: asset(at: index))
+        delegate?.imagePicker(controller: self, didSelect: asset(at: index), at: index)
     }
 
     func imagePicker(delegate pickerDelegate: ImagePickerDelegate, didDeselectAssetItemAt index: Int) {

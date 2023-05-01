@@ -10,7 +10,7 @@ public protocol ImagePickerControllerDelegate: class {
     func imagePicker(controller: ImagePickerController, didSelectActionItemAt index: Int)
 
     /// Called when user select an asset.
-    func imagePicker(controller: ImagePickerController, didSelect asset: PHAsset)
+    func imagePicker(controller: ImagePickerController, didSelect asset: PHAsset, at index: Int)
 
     /// Called when user unselect previously selected asset.
     func imagePicker(controller: ImagePickerController, didDeselect asset: PHAsset)
