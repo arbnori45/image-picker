@@ -2,6 +2,7 @@
 
 import AVFoundation
 import Photos
+import CoreMotion
 
 final class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
 	
@@ -30,12 +31,14 @@ final class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
 	private let willCapturePhotoAnimation: () -> ()
 	private let capturingLivePhoto: (Bool) -> ()
 	private let completed: (PhotoCaptureDelegate) -> ()
+  private let motionManager = CMMotionManager()
 
 	init(with requestedPhotoSettings: AVCapturePhotoSettings, willCapturePhotoAnimation: @escaping () -> (), capturingLivePhoto: @escaping (Bool) -> (), completed: @escaping (PhotoCaptureDelegate) -> ()) {
 		self.requestedPhotoSettings = requestedPhotoSettings
 		self.willCapturePhotoAnimation = willCapturePhotoAnimation
 		self.capturingLivePhoto = capturingLivePhoto
 		self.completed = completed
+    self.motionManager.startAccelerometerUpdates()
 	}
 	
 	private func didFinish() {
@@ -62,18 +65,105 @@ final class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
     func photoOutput(_ captureOutput: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
 		willCapturePhotoAnimation()
 	}
+
+  func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    guard let imageData = photo.fileDataRepresentation() else { return }
     
+    let image = UIImage(data: imageData)
+    let fixedImage = fixImageOrientation(image: image!)
+
+    guard let rotatedImageData = dataFromRotatedImage(image: fixedImage) else { return }
+    motionManager.stopAccelerometerUpdates()
+
+    // Save the rotatedImageData to the asset
+    let library = PHPhotoLibrary.shared()
+    library.performChanges({
+      let creationRequest = PHAssetCreationRequest.forAsset()
+      creationRequest.addResource(with: .photo, data: rotatedImageData, options: nil)
+    }, completionHandler: { (success, error) in
+      if let error = error {
+        self.processError = error
+        print("Error: \(error.localizedDescription)")
+      } else {
+        self.photoData = rotatedImageData
+        print("Photo added to the library successfully")
+      }
+    })
+  }
+
+  func deviceOrientationFromAccelerometer() -> UIDeviceOrientation {
+      guard motionManager.isAccelerometerAvailable else {
+          return .unknown
+      }
+
+      if let data = motionManager.accelerometerData {
+          if data.acceleration.x >= 0.75 {
+              return .landscapeLeft
+          } else if data.acceleration.x <= -0.75 {
+              return .landscapeRight
+          } else if data.acceleration.y <= -0.75 {
+              return .portrait
+          } else if data.acceleration.y >= 0.75 {
+              return .portraitUpsideDown
+          }
+      }
+
+      return .unknown
+  }
+
+  func fixImageOrientation(image: UIImage) -> UIImage {
+      let orientation = deviceOrientationFromAccelerometer()
+
+      var rotationAngle: CGFloat = 0.0
+
+      switch orientation {
+      case .portrait:
+          rotationAngle = 0.0
+      case .landscapeRight:
+          rotationAngle = -CGFloat.pi / 2
+      case .portraitUpsideDown:
+          rotationAngle = CGFloat.pi
+      case .landscapeLeft:
+          rotationAngle = CGFloat.pi / 2
+      default:
+          break
+      }
+
+      let imageSize = CGSize(width: image.size.height, height: image.size.width)
+      UIGraphicsBeginImageContextWithOptions(imageSize, false, image.scale)
+      let context = UIGraphicsGetCurrentContext()!
+
+      context.translateBy(x: imageSize.width / 2, y: imageSize.height / 2)
+      context.rotate(by: rotationAngle)
+      context.translateBy(x: -image.size.width / 2, y: -image.size.height / 2)
+
+      image.draw(in: CGRect(origin: CGPoint.zero, size: image.size))
+
+      let fixedImage = UIGraphicsGetImageFromCurrentImageContext()!
+      UIGraphicsEndImageContext()
+
+      return fixedImage
+  }
+
+  func dataFromRotatedImage(image: UIImage) -> Data? {
+      guard let imageData = image.jpegData(compressionQuality: 1.0) else {
+          return nil
+      }
+      return imageData
+  }
+
     //this method is not called on iOS 11 if method above is implemented
-    func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-		if let photoSampleBuffer = photoSampleBuffer {
-            photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
-		}
-		else if let error = error {
-			log("photo capture delegate: error capturing photo: \(error)")
-            processError = error
-			return
-		}
-	}
+//    func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+//		if let photoSampleBuffer = photoSampleBuffer {
+//
+//            photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
+//		}
+//		else if let error = error {
+//			log("photo capture delegate: error capturing photo: \(error)")
+//            processError = error
+//			return
+//		}
+//	}
 	
     func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishRecordingLivePhotoMovieForEventualFileAt outputFileURL: URL, resolvedSettings: AVCaptureResolvedPhotoSettings) {
         capturingLivePhoto(false)

@@ -4,7 +4,7 @@ import UIKit
 
 /// Each image picker asset cell must conform to this protocol.
 
-public protocol ImagePickerAssetCell: class {
+public protocol ImagePickerAssetCell: AnyObject {
 
     /// This image view will be used when setting an asset's image
     var imageView: UIImageView! { get }

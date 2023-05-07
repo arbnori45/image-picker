@@ -5,7 +5,7 @@ import Photos
 
 /// Group of methods informing what image picker is currently doing
 
-public protocol ImagePickerControllerDelegate: class {
+public protocol ImagePickerControllerDelegate: AnyObject {
     /// Called when user taps on an action item, index is either 0 or 1 depending which was tapped
     func imagePicker(controller: ImagePickerController, didSelectActionItemAt index: Int)
 

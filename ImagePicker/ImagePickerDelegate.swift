@@ -4,7 +4,7 @@ import UIKit
 
 /// Informs a delegate what is going on in ImagePickerDelegate
 
-protocol ImagePickerDelegateDelegate: class {
+protocol ImagePickerDelegateDelegate: AnyObject {
     /// Called when user selects one of action items
     func imagePicker(delegate: ImagePickerDelegate, didSelectActionItemAt index: Int)
     

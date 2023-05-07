@@ -2,7 +2,7 @@
 
 import Foundation
 
-protocol CameraCollectionViewCellDelegate: class {
+protocol CameraCollectionViewCellDelegate: AnyObject {
     func takePicture()
     func takeLivePhoto()
     func startVideoRecording()

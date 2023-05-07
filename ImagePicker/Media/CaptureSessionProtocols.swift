@@ -3,7 +3,7 @@
 import AVFoundation
 
 /// Groups a method that informs a delegate about progress and state of photo capturing.
-protocol CaptureSessionPhotoCapturingDelegate : class {
+protocol CaptureSessionPhotoCapturingDelegate : AnyObject {
     /// called as soon as the photo was taken, use this to update UI - for example show flash animation or live photo icon
     func captureSession(_ session: CaptureSession, willCapturePhotoWith settings: AVCapturePhotoSettings)
 
@@ -21,7 +21,7 @@ protocol CaptureSessionPhotoCapturingDelegate : class {
 }
 
 /// Groups a method that informs a delegate about progress and state of video recording.
-protocol CaptureSessionVideoRecordingDelegate : class {
+protocol CaptureSessionVideoRecordingDelegate : AnyObject {
     ///called when video file recording output is added to the session
     func captureSessionDidBecomeReadyForVideoRecording(_ session: CaptureSession)
 
@@ -43,7 +43,7 @@ protocol CaptureSessionVideoRecordingDelegate : class {
     func captureSessionDid(_ session: CaptureSession, didFailVideoRecording error: Error)
 }
 
-protocol CaptureSessionDelegate : class {
+protocol CaptureSessionDelegate : AnyObject {
     ///called when session is successfully configured and started running
     func captureSessionDidResume(_ session: CaptureSession)
 
