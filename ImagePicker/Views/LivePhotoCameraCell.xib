@@ -27,7 +27,7 @@
                         <state key="normal" image="icon-live-off"/>
                         <state key="selected" image="icon-live-on"/>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWp-o0-bWK" customClass="ShutterButton" customModule="ImagePicker">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWp-o0-bWK" customClass="ShutterButton" customModule="ImagePicker">
                         <rect key="frame" x="87.5" y="210" width="44" height="44"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="Lmu-Ph-K0b"/>

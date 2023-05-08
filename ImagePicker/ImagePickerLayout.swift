@@ -95,7 +95,7 @@ final class ImagePickerLayout {
     private func sizeForCameraItem(_ collectionView: UICollectionView, layoutModel: LayoutModel, layout: UICollectionViewFlowLayout) -> CGSize {
         // Lets keep this ratio so camera item is a nice rectangle
         let traitCollection = collectionView.traitCollection
-        var ratio: CGFloat = 160/260
+        var ratio: CGFloat = 160/430
         
         // For iphone in landscape we need different ratio
         if traitCollection.userInterfaceIdiom == .phone {
