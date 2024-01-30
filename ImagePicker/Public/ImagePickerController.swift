@@ -314,7 +314,8 @@ extension ImagePickerController: PHPhotoLibraryChangeObserver {
     public func photoLibraryDidChange(_ changeInstance: PHChange) {
         guard let fetchResult = collectionViewDataSource.assetsCacheItem.fetchResult, let changes = changeInstance.changeDetails(for: fetchResult) else { return }
         
-        collectionViewCoordinator.performDataSourceUpdate { [unowned self] in
+        collectionViewCoordinator.performDataSourceUpdate { [weak self] in
+            guard let self else { return }
             // Update old fetch result with these updates
             self.collectionViewDataSource.assetsCacheItem.fetchResult = changes.fetchResultAfterChanges
             

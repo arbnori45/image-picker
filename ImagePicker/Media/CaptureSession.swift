@@ -490,7 +490,8 @@ extension CaptureSession {
             return log("capture session: warning - trying to change camera but capture session setup failed")
         }
 
-        sessionQueue.async { [unowned self] in
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
             let currentVideoDevice = self.videoDeviceInput.device
             let devices = self.videoDeviceDiscoverySession.devices
             guard let videoDevice = devices.getPreferredDevice(for: currentVideoDevice) else {
@@ -602,20 +603,23 @@ private extension CaptureSession {
     }
 
     func capturePhotoAnimation(_ photoSettings: AVCapturePhotoSettings) {
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
             self.photoCapturingDelegate?.captureSession(self, willCapturePhotoWith: photoSettings)
         }
     }
 
     func capturingLivePhoto(_ capturing: Bool) {
-        self.sessionQueue.async { [unowned self] in
+        self.sessionQueue.async { [weak self] in
+            guard let self else { return }
             /*
              Because Live Photo captures can overlap, we need to keep track of the
              number of in progress Live Photo captures to ensure that the
              Live Photo label stays visible during these captures.
              */
             let inProgressLivePhotoCapturesCount = self.updateInProgressLivePhotoCapturesCount(for: capturing)
-            DispatchQueue.main.async { [unowned self] in
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
                 if inProgressLivePhotoCapturesCount >= 0 {
                     self.photoCapturingDelegate?.captureSessionDidChangeNumberOfProcessingLivePhotos(self)
                 } else {
@@ -644,8 +648,8 @@ private extension CaptureSession {
     }
 
     func removeReferenceToCaptureDelegate(_ delegate: PhotoCaptureDelegate) {
-        self.sessionQueue.async { [unowned self] in
-            self.inProgressPhotoCaptureDelegates[delegate.requestedPhotoSettings.uniqueID] = nil
+        self.sessionQueue.async { [weak self] in
+            self?.inProgressPhotoCaptureDelegates[delegate.requestedPhotoSettings.uniqueID] = nil
         }
     }
 
@@ -670,8 +674,8 @@ private extension CaptureSession {
             self.capturePhotoAnimation(photoSettings)
         }, capturingLivePhoto: { capturing in
             self.capturingLivePhoto(capturing)
-        }, completed: { [unowned self] delegate in
-            self.processPhotoCaptureCompletion(delegate: delegate)
+        }, completed: { [weak self] delegate in
+            self?.processPhotoCaptureCompletion(delegate: delegate)
         })
 
         delegate.savesPhotoToLibrary = saveToPhotoLibrary

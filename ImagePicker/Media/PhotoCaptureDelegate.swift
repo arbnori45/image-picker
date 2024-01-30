@@ -198,9 +198,11 @@ final class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
             return
         }
         
-		PHPhotoLibrary.requestAuthorization { [unowned self] status in
+		PHPhotoLibrary.requestAuthorization { [weak self] status in
+            guard let self else { return }
 			if status == .authorized {
-				PHPhotoLibrary.shared().performChanges({ [unowned self] in
+				PHPhotoLibrary.shared().performChanges({ [weak self] in
+                        guard let self else { return }
 						let creationRequest = PHAssetCreationRequest.forAsset()
 						creationRequest.addResource(with: .photo, data: photoData, options: nil)
 					
@@ -210,7 +212,8 @@ final class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
 							creationRequest.addResource(with: .pairedVideo, fileURL: livePhotoCompanionMovieURL, options: livePhotoCompanionMovieFileResourceOptions)
 						}
 					
-                    }, completionHandler: { [unowned self] success, error in
+                    }, completionHandler: { [weak self] success, error in
+                        guard let self else { return }
 						if let error = error {
 							log("photo capture delegate: Error occurered while saving photo to photo library: \(error)")
 						}
