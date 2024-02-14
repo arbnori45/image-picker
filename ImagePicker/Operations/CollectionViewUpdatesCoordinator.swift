@@ -28,13 +28,13 @@ final class CollectionViewUpdatesCoordinator {
     
     /// Updates collection view.
     func performChanges<PHAsset>(_ changes: PHFetchResultChangeDetails<PHAsset>, inSection: Int) {
-        if changes.hasIncrementalChanges {
-            let operation = CollectionViewBatchAnimation(collectionView: collectionView, sectionIndex: inSection, changes: changes)
-            serialMainQueue.addOperation(operation)
-        } else {
+//        if changes.hasIncrementalChanges {
+//            let operation = CollectionViewBatchAnimation(collectionView: collectionView, sectionIndex: inSection, changes: changes)
+//            serialMainQueue.addOperation(operation)
+//        } else {
             serialMainQueue.addOperation { [weak self] in
                 self?.collectionView.reloadData()
-            }
+//            }
         }
     }
 }
